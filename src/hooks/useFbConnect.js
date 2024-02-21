@@ -1,3 +1,5 @@
+import { FACEBOOK_APP_ID } from "../utils/Constants";
+
 const useFbConnect = () => {
   if (window.FB === undefined) {
     console.log("FB undefined -> provide callback");
@@ -11,7 +13,7 @@ const useFbConnect = () => {
 
   function initialize() {
     window.FB.init({
-      appId: "434177738955192",
+      appId: FACEBOOK_APP_ID,
       cookie: true,
       xfbml: true,
       version: "v19.0",

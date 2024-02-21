@@ -1,40 +1,27 @@
 import React, { useState, useEffect } from "react";
+import useFbConnect from "../hooks/useFbConnect";
+import { Link } from "react-router-dom";
+import useFbPage from "../hooks/useFbPage";
+import { useDispatch } from "react-redux";
+import { addData } from "../utils/fbSlice";
 
 const FbLogin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginResponse, setLoginResponse] = useState(null);
   const [integrationId, setIntegrationId] = useState(null);
+  const [userId, setUserId] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
+  const dispatch = useDispatch();
+
+  useFbConnect();
 
   useEffect(() => {
-    // Load the Facebook SDK asynchronously
-    window.fbAsyncInit = function () {
-      window.FB.init({
-        appId: "434177738955192",
-        cookie: true,
-        xfbml: true,
-        version: "v12.0",
-      });
-
-      window.FB.getLoginStatus(function (response) {
-        if (response.status === "connected") {
-          setIsLoggedIn(true);
-          setLoginResponse(response);
-          setIntegrationId(response.authResponse.graphDomain);
-        }
-      });
-    };
-
-    // Load the SDK asynchronously
-    (function (d, s, id) {
-      var js,
-        fjs = d.getElementsByTagName(s)[0];
-      if (d.getElementById(id)) return;
-      js = d.createElement(s);
-      js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
-      fjs.parentNode.insertBefore(js, fjs);
-    })(document, "script", "facebook-jssdk");
-  }, []);
+    // Call the pageInfo function when loginResponse changes
+    if (loginResponse) {
+      pageInfo();
+      dispatch(addData(loginResponse));
+    }
+  }, [loginResponse]);
 
   const handleLogoutClick = () => {
     if (!window.FB) return;
@@ -43,6 +30,13 @@ const FbLogin = () => {
       setLoginResponse(null);
       setIntegrationId(null);
     });
+  };
+
+  const pageInfo = () => {
+    const { authResponse } = loginResponse;
+    const { userID, accessToken } = authResponse;
+    setUserId(userID);
+    setAccessToken(accessToken);
   };
 
   const handleReplyClick = () => {
@@ -73,12 +67,14 @@ const FbLogin = () => {
               >
                 Delete Integration
               </button>
-              <button
-                className="p-4 my-2 bg-blue-500 w-full rounded-lg text-white transition-colors ease-in-out hover:bg-blue-700 hover:text-white"
-                onClick={handleReplyClick}
-              >
-                Reply to Messages
-              </button>
+              <Link to={"/client/Agent/user"}>
+                <button
+                  className="p-4 my-2 bg-blue-500 w-full rounded-lg text-white transition-colors ease-in-out hover:bg-blue-700 hover:text-white"
+                  onClick={handleReplyClick}
+                >
+                  Reply to Messages
+                </button>
+              </Link>
             </div>
           ) : (
             <button
@@ -99,13 +95,10 @@ const FbLogin = () => {
           )}
         </form>
       </div>
-      {/* Display login response */}
-      {loginResponse && (
-        <div>
-          <h2>Login Response:</h2>
-          <pre>{JSON.stringify(loginResponse, null, 2)}</pre>
-        </div>
-      )}
+      {}
+
+      {console.log(loginResponse)}
+      {useFbPage(userId, accessToken)}
     </div>
   );
 };

@@ -3,10 +3,10 @@ import useFbConnect from "../hooks/useFbConnect";
 
 const AgentScreen = () => {
   async function fetchConversations() {
-    const latestApiVersion = "v12.0"; // Replace with the latest API version
-    const pageId = "YOUR_PAGE_ID"; // Replace with your Facebook Page ID
-    const platform = "PLATFORM"; // Replace with the platform you're accessing the API from
-    const accessToken = "authResponse.accessToken"; // Replace with your Page Access Token
+    const latestApiVersion = "v12.0";
+    const pageId = "YOUR_PAGE_ID";
+    const platform = "PLATFORM";
+    const accessToken = "authResponse.accessToken";
 
     const url = `https://graph.facebook.com/${latestApiVersion}/${pageId}/conversations?platform=${platform}&access_token=${accessToken}`;
 

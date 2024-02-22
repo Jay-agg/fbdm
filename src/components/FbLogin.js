@@ -13,7 +13,7 @@ const FbLogin = () => {
   const [accessToken, setAccessToken] = useState(null);
   const dispatch = useDispatch();
 
-  useFbConnect();
+  useFbConnect(); // Call useFbConnect to initialize Facebook SDK
 
   useEffect(() => {
     // Call the pageInfo function when loginResponse changes
@@ -42,6 +42,18 @@ const FbLogin = () => {
   const handleReplyClick = () => {
     // Functionality for replying to messages
     console.log("Reply to messages clicked");
+  };
+
+  const handleLoginClick = () => {
+    // Call FB.login when the login button is clicked
+    window.FB &&
+      window.FB.login((response) => {
+        if (response.authResponse) {
+          setIsLoggedIn(true);
+          setLoginResponse(response);
+          setIntegrationId(response.authResponse.graphDomain);
+        }
+      });
   };
 
   return (
@@ -79,16 +91,7 @@ const FbLogin = () => {
           ) : (
             <button
               className="p-4 my-2 bg-blue-900 w-full rounded-lg text-white transition-colors ease-in-out hover:bg-blue-700 hover:text-white"
-              onClick={() => {
-                window.FB &&
-                  window.FB.login((response) => {
-                    if (response.authResponse) {
-                      setIsLoggedIn(true);
-                      setLoginResponse(response);
-                      setIntegrationId(response.authResponse.graphDomain);
-                    }
-                  });
-              }}
+              onClick={handleLoginClick} // Call handleLoginClick instead of inline function
             >
               Login with Facebook
             </button>

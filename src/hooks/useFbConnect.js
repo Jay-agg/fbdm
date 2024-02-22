@@ -13,7 +13,7 @@ const useFbConnect = () => {
 
   function initialize() {
     window.FB.init({
-      appId: FACEBOOK_APP_ID,
+      appId: "434177738955192",
       cookie: true,
       xfbml: true,
       version: "v19.0",
